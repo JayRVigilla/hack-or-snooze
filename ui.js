@@ -194,6 +194,7 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+    $('#nav-bar-links').show();
   }
 
   /* simple function to pull the hostname from a URL */
@@ -221,3 +222,6 @@ $(async function() {
     }
   }
 });
+
+
+//need to find home for addStory() from api-classes.js

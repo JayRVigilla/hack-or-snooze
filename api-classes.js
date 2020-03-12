@@ -47,15 +47,37 @@ class StoryList {
    * Returns the new story object
    */
 
-   // *** DO THIS THING!!!***
-   // axios.post(url(user might be here?, api requirements, parameters(user, newStory))
-   //**takes in "three key object" and returns "full article information including last update, creation, articleId"
-  async addStory(user, newStory) {
+   // we didn't end up needing user as parameter for addStory
+  async addStory(newStory) {
+    // commented out in case we need to find these values in the HTML later
+    // let $author = $('#author').val();
+    // let $title = $('#title').val();
+    // let $url = $('#url').val();
+    let title = newStory.title;
+    let author = newStory.author;
+    let url = newStory.url;
+    const token = localStorage.getItem("token");
+
+    let response = await axios.post(`${BASE_URL}/stories`, {
+        token: token,
+        story: {
+          title,
+          author,
+          url
+    }
+  });
+    return response;
+    // pulled to show a structure for map(ing the response?
+    // existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
+
+  }
+}
+    // how do we return this to the creation of a new story instance?
+      //creating a new instance of Story class from the response
+    
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
     // the script.js file where it will be appended to the DOM
-  }
-}
 
 
 /**
