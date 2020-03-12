@@ -1,3 +1,6 @@
+// wait til HTML is loaded before doing any of the functions within
+// they're all dependednt upon responses from server, so await... its all async
+
 $(async function() {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
@@ -30,6 +33,7 @@ $(async function() {
     const password = $("#login-password").val();
 
     // call the login static method to build a user instance
+    // line 109 in api-classes.js has User.login()
     const userInstance = await User.login(username, password);
     // set the global user to the user instance
     currentUser = userInstance;
@@ -82,7 +86,7 @@ $(async function() {
   /**
    * Event handler for Navigation to Homepage
    */
-
+// Seeing Event Delegation, but... ***why not just use $('#nav-all')? it's on an <a>*** 
   $("body").on("click", "#nav-all", async function() {
     hideElements();
     await generateStories();
@@ -141,6 +145,7 @@ $(async function() {
     // update our global variable
     storyList = storyListInstance;
     // empty out that part of the page
+    // includes the h3 tag that says "loading..."
     $allStoriesList.empty();
 
     // loop through all of our stories and generate HTML for them
@@ -195,6 +200,7 @@ $(async function() {
 
   function getHostName(url) {
     let hostName;
+    // indexOf("multicharacter string") returns the index of the first character of that string
     if (url.indexOf("://") > -1) {
       hostName = url.split("/")[2];
     } else {
@@ -207,7 +213,7 @@ $(async function() {
   }
 
   /* sync current user information to localStorage */
-
+// currentUser is still a global variable...don't scroll up, it's there
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem("token", currentUser.loginToken);

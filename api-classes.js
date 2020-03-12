@@ -23,6 +23,9 @@ class StoryList {
   // is **not** an instance method. Rather, it is a method that is called on the
   // class directly. Why doesn't it make sense for getStories to be an instance method?
 
+
+// static allows us to not inheret to intances of this Class
+// getStories() used in ui.js line 140
   static async getStories() {
     // query the /stories endpoint (no auth required)
     const response = await axios.get(`${BASE_URL}/stories`);
@@ -32,6 +35,7 @@ class StoryList {
 
     // build an instance of our own class using the new array of stories
     const storyList = new StoryList(stories);
+    //returns object because 'storyList' is an instance of the Class 'StoryList'
     return storyList;
   }
 
@@ -43,6 +47,9 @@ class StoryList {
    * Returns the new story object
    */
 
+   // *** DO THIS THING!!!***
+   // axios.post(url(user might be here?, api requirements, parameters(user, newStory))
+   //**takes in "three key object" and returns "full article information including last update, creation, articleId"
   async addStory(user, newStory) {
     // TODO - Implement this functions!
     // this function should return the newly created story so it can be used in
@@ -147,6 +154,7 @@ class User {
     existingUser.loginToken = token;
 
     // instantiate Story instances for the user's favorites and ownStories
+    // 's' is the 'storyObj' variable passed into Story constructor
     existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
     existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
     return existingUser;
