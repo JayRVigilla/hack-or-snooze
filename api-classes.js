@@ -48,11 +48,7 @@ class StoryList {
    */
 
    // we didn't end up needing user as parameter for addStory
-  async addStory(newStory) {
-    // commented out in case we need to find these values in the HTML later
-    // let $author = $('#author').val();
-    // let $title = $('#title').val();
-    // let $url = $('#url').val();
+  static async addStory(newStory) {
     let title = newStory.title;
     let author = newStory.author;
     let url = newStory.url;
@@ -66,10 +62,9 @@ class StoryList {
           url
     }
   });
+  
     return response;
-    // pulled to show a structure for map(ing the response?
-    // existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
-
+   
   }
 }
     // how do we return this to the creation of a new story instance?

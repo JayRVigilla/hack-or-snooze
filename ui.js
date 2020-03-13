@@ -225,3 +225,18 @@ $(async function() {
 
 
 //need to find home for addStory() from api-classes.js
+
+$('#nav-submit').on("click", function () {
+  let $submitForm = $('#submit-form');
+  $submitForm.slideToggle();
+  $submitForm.show();
+})
+
+$('#submit-form').on("submit", async function (evt) {
+  evt.preventDefault();
+  let newStory = {};
+  newStory.author = $('#author').val();
+  newStory.title = $('#title').val();
+  newStory.url = $('#url').val();
+  await StoryList.addStory(newStory);
+})
