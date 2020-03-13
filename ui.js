@@ -194,7 +194,9 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
-    $('#nav-bar-links').show();
+    $('#main-nav-links').show();
+    $('#nav-user-profile').text(currentUser.username);
+    $('#nav-welcome').show();
   }
 
   /* simple function to pull the hostname from a URL */
@@ -228,7 +230,7 @@ $('#nav-submit').on("click", function () {
   $submitForm.show();
 })
 
-$submitForm.on("submit", async function (evt) {
+$submitForm.on("submit", async function handleFormSumission(evt) {
   // prevent form from immediately sending the values
   evt.preventDefault();
   
