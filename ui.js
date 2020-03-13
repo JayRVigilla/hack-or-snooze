@@ -172,8 +172,8 @@ $(async function () {
     // deafault is to show outline
     const storyMarkup = $(`
       <li id="${story.storyId}">
-      <i class="fas fa-star hidden"></i>
-      <i class="far fa-star"></i>
+      <i class="fas fa-star favorite hidden"></i>
+      <i class="far fa-star unfavorite"></i>
               <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
@@ -305,19 +305,21 @@ $(async function () {
 
   
     // toggles star from clear to solid and vice versa in DOM
-      $('.fas.fa-star').on('click', function (evt) {
+      $('body').on('click', '.favorite',  function (evt) {
         console.log(evt.target);
         $(evt.target).hide();
-        $('.far.fa-star').show();
+        let unfavorited = /*$(`${evt.target} ~ .unfavorite`)*/ $(evt.target).siblings('i');
+        unfavorited.show();
         let storyId = $(evt.target.parentNode).attr('id');
         // remove from currentUser.favorites
         // axios.delete();
       })
 
-      $('.far.fa-star').on('click', function (evt) {
+      $('body').on('click', '.unfavorite', function (evt) {
         console.log(evt.target);
         $(evt.target).hide();
-        $('.fas.fa-star').show();
+        let favorited = /*$(`${evt.target} ~ .favorite`)*/ $(evt.target).siblings('i');
+        favorited.show();
         let storyId = $(evt.target.parentNode).attr('id');
         // add to currentUser.favorites
         // axios.post();
@@ -336,8 +338,8 @@ $(async function () {
     // line 169 is a solid star, 170 is an outline
     const storyMarkup = $(`
     <li id="${story.storyId}">
-    <i class="fas fa-star"></i>
-    <i class="far fa-star hidden"></i>
+    <i class="fas fa-star favorite"></i>
+    <i class="far fa-star unfavorite hidden"></i>
             <a class="article-link" href="${story.url}" target="a_blank">
         <strong>${story.title}</strong>
       </a>
