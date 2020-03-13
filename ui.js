@@ -303,28 +303,6 @@ $(async function () {
     $allStoriesList.hide();
   }
 
-  
-    // toggles star from clear to solid and vice versa in DOM
-      $('body').on('click', '.favorite',  function (evt) {
-        console.log(evt.target);
-        $(evt.target).hide();
-        let unfavorited = /*$(`${evt.target} ~ .unfavorite`)*/ $(evt.target).siblings('i');
-        unfavorited.show();
-        let storyId = $(evt.target.parentNode).attr('id');
-        // remove from currentUser.favorites
-        // axios.delete();
-      })
-
-      $('body').on('click', '.unfavorite', function (evt) {
-        console.log(evt.target);
-        $(evt.target).hide();
-        let favorited = /*$(`${evt.target} ~ .favorite`)*/ $(evt.target).siblings('i');
-        favorited.show();
-        let storyId = $(evt.target.parentNode).attr('id');
-        // add to currentUser.favorites
-        // axios.post();
-      })
-
 
   /**
    * A function to render HTML for an current User Favorites
@@ -353,6 +331,31 @@ $(async function () {
     );
     return storyMarkup;
   }
+
+
+    // toggles star from clear to solid and vice versa in DOM
+    $('body').on('click', '.favorite',  function handleUnfavoriteClick(evt) {
+      console.log(evt.target);
+      $(evt.target).hide();
+      let unfavorited = /*$(`${evt.target} ~ .unfavorite`)*/ $(evt.target).siblings('i');
+      unfavorited.show();
+      let storyId = $(evt.target.parentNode).attr('id');
+      // remove from currentUser.favorites
+      // axios.delete();
+    })
+
+    $('body').on('click', '.unfavorite', async function handleFavoriteClick(evt) {
+      console.log(evt.target);
+      $(evt.target).hide();
+      let favorited = /*$(`${evt.target} ~ .favorite`)*/ $(evt.target).siblings('i');
+      favorited.show();
+      let storyId = $(evt.target.parentNode).attr('id');
+      // add to currentUser.favorites
+      // axios.post();
+      let username = currentUser.username;
+      const token = localStorage.getItem("token");
+      currentUser = await User.addFavorite(username, storyId, token);
+    })
 
 
 
