@@ -1,7 +1,7 @@
 // wait til HTML is loaded before doing any of the functions within
 // they're all dependednt upon responses from server, so await... its all async
 
-$(async function() {
+$(async function () {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
@@ -25,7 +25,7 @@ $(async function() {
    *  If successfully we will setup the user instance
    */
 
-  $loginForm.on("submit", async function(evt) {
+  $loginForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
     // grab the username and password
@@ -46,7 +46,7 @@ $(async function() {
    *  If successfully we will setup a new user instance
    */
 
-  $createAccountForm.on("submit", async function(evt) {
+  $createAccountForm.on("submit", async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
@@ -65,7 +65,7 @@ $(async function() {
    * Log Out Functionality
    */
 
-  $navLogOut.on("click", function() {
+  $navLogOut.on("click", function () {
     // empty out local storage
     localStorage.clear();
     // refresh the page, clearing memory
@@ -76,7 +76,7 @@ $(async function() {
    * Event Handler for Clicking Login
    */
 
-  $navLogin.on("click", function() {
+  $navLogin.on("click", function () {
     // Show the Login and Create Account Forms
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
@@ -86,8 +86,8 @@ $(async function() {
   /**
    * Event handler for Navigation to Homepage
    */
-// Seeing Event Delegation, but... ***why not just use $('#nav-all')? it's on an <a>*** 
-  $("body").on("click", "#nav-all", async function() {
+  // Seeing Event Delegation, but... ***why not just use $('#nav-all')? it's on an <a>*** 
+  $("body").on("click", "#nav-all", async function () {
     hideElements();
     await generateStories();
     $allStoriesList.show();
@@ -163,10 +163,15 @@ $(async function() {
     let hostName = getHostName(story.url);
 
     // render story markup
-    // PART 3, add star badge in here for favoriting
+    // line 169 is a solid star, 170 is an outline
+    // will want to toggle between the two depending on a favorited value
+    // OR ifFavorite() that queries the database
+    // deafault is to show outline
     const storyMarkup = $(`
       <li id="${story.storyId}">
-        <a class="article-link" href="${story.url}" target="a_blank">
+      <i class="fas fa-star hidden"></i>
+      <i class="far fa-star"></i>
+              <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
         <small class="article-author">by ${story.author}</small>
@@ -217,7 +222,7 @@ $(async function() {
   }
 
   /* sync current user information to localStorage */
-// currentUser is still a global variable...don't scroll up, it's there
+  // currentUser is still a global variable...don't scroll up, it's there
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem("token", currentUser.loginToken);
@@ -226,31 +231,44 @@ $(async function() {
   }
 
 
-$('#nav-submit').on("click", function () {
-  $submitForm.slideToggle();
-  $submitForm.show();
+  $('#nav-submit').on("click", function () {
+    $submitForm.slideToggle();
+    $submitForm.show();
+  })
+
+  $submitForm.on("submit", async function handleFormSumission(evt) {
+    // prevent form from immediately sending the values
+    evt.preventDefault();
+
+    // create a newStory object to feed into addStory
+    let newStory = {};
+    newStory.author = $('#author').val();
+    newStory.title = $('#title').val();
+    newStory.url = $('#url').val();
+
+    // add the new story by calling addStory on the class StoryList
+    await StoryList.addStory(newStory);
+
+    // create a new instance of StoryList by invoking generateStories
+    // this creates a new instance of StoryList, clears out the current allStoriesList section, 
+    // recreates the HTML for each story and reappends it to the DOM one by one
+    await generateStories();
+
+    // reset the form and hide it by sliding it up
+    $submitForm.trigger("reset");
+    $submitForm.slideToggle();
+  })
 })
 
-$submitForm.on("submit", async function handleFormSumission(evt) {
-  // prevent form from immediately sending the values
-  evt.preventDefault();
-  
-  // create a newStory object to feed into addStory
-  let newStory = {};
-  newStory.author = $('#author').val();
-  newStory.title = $('#title').val();
-  newStory.url = $('#url').val();
+// handles all things related to favorite-ing on the click of the <i>
+async function ifFavorite(){
+// showStar()
+// sends GET request to server to see if storyID being populated to a list is ALSO in user favorites
+//  IF it is then hide <i> with 'far' and show the one with 'fas'
+// maybe a ternary condition for both? ----- .hidden ? .show() : .hide()
 
-  // add the new story by calling addStory on the class StoryList
-  await StoryList.addStory(newStory);
-
-  // create a new instance of StoryList by invoking generateStories
-  // this creates a new instance of StoryList, clears out the current allStoriesList section, 
-  // recreates the HTML for each story and reappends it to the DOM one by one
-  await generateStories();
-  
-  // reset the form and hide it by sliding it up
-  $submitForm.trigger("reset");
-  $submitForm.slideToggle();
-})
-});
+// dbFavorites()
+// updates serverside status of favorites by appending or removing from array in user obj
+// 
+}
+;
