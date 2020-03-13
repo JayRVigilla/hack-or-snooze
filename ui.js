@@ -163,6 +163,7 @@ $(async function() {
     let hostName = getHostName(story.url);
 
     // render story markup
+    // PART 3, add star badge in here for favoriting
     const storyMarkup = $(`
       <li id="${story.storyId}">
         <a class="article-link" href="${story.url}" target="a_blank">
