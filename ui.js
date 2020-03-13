@@ -239,4 +239,5 @@ $('#submit-form').on("submit", async function (evt) {
   newStory.title = $('#title').val();
   newStory.url = $('#url').val();
   await StoryList.addStory(newStory);
+  await generateStories();
 })
