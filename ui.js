@@ -1,6 +1,9 @@
+
+// global currentUser variable
+let currentUser = null;
+
 // wait til HTML is loaded before doing any of the functions within
 // they're all dependednt upon responses from server, so await... its all async
-
 $(async function () {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
@@ -11,12 +14,10 @@ $(async function () {
   const $ownStories = $("#my-articles");
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
+  const $faveArticlesLoc = $('#favorited-articles');
 
   // global storyList variable
   let storyList = null;
-
-  // global currentUser variable
-  let currentUser = null;
 
   await checkIfLoggedIn();
 
@@ -163,9 +164,11 @@ $(async function () {
     let hostName = getHostName(story.url);
 
     // render story markup
+
+    // re:star
     // line 169 is a solid star, 170 is an outline
     // will want to toggle between the two depending on a favorited value
-    // OR ifFavorite() that queries the database
+    // OR ifFavorite that queries the database
     // deafault is to show outline
     const storyMarkup = $(`
       <li id="${story.storyId}">
@@ -178,7 +181,10 @@ $(async function () {
         <small class="article-hostname ${hostName}">(${hostName})</small>
         <small class="article-username">posted by ${story.username}</small>
       </li>
-    `);
+    `
+      // re:star - could we add the check for favorited/myStories here?
+      // if story.favorite then $(fas).show(), $(far).hide()
+    );
 
     return storyMarkup;
   }
@@ -258,17 +264,106 @@ $(async function () {
     $submitForm.trigger("reset");
     $submitForm.slideToggle();
   })
+
+  // handles all things related to favorite-ing on the click of the <i>
+  // #favorited-articles is ul in an article tag in HTML(line 56). constant created: $favArticles
+  async function ifFavorite() {
+
+    // sends GET request to server to see if storyID being populated to a list is ALSO in user favorites
+    //  IF it is then hide <i> with 'far' and show the one with 'fas'
+    // maybe a ternary condition for both? ----- .hidden ? .show() : .hide()
+    async function showStar() {
+
+    }
+
+
+    // dbFavorites()
+    // updates serverside status of favorites by appending or removing from array in user obj
+    // 
+  }
+  ;
+
+
+
+  //trying to make original generate stories @li 143 reworked for favorites
+  async function generateFaveStories() {
+    // get an instance of StoryList
+    console.log(await currentUser);
+    const userFaves = currentUser.favorites;
+    // empty out that part of the page
+    // includes the h3 tag that says "loading..."
+    $faveArticlesLoc.empty();
+
+    // loop through all of our stories and generate HTML for them
+    for (let story of userFaves) {
+      const result = generateFaveStoryHTML(story);
+      $faveArticlesLoc.append(result);
+    }
+    $faveArticlesLoc.show();
+    $allStoriesList.hide();
+
+    // toggles star from clear to solid and vice versa in DOM
+    function toggleStar() {
+      $('.fas fa-star').on('click', function (evt) {
+        $('.fas fa-star').hide();
+        $('.far fa-star').show();
+        let storyId = $(evt.target.parentNode).attr('id');
+        // remove from currentUser.favorites
+        axios.delete();
+      })
+      $('.far fa-star').on('click', function (evt) {
+        $('.far fa-star').hide();
+        $('.fas fa-star').show();
+        let storyId = $(evt.target.parentNode).attr('id');
+        // add to currentUser.favorites
+        axios.post();
+      })
+
+    }
+  }
+
+
+
+  /**
+   * A function to render HTML for an current User Favorites
+   */
+  function generateFaveStoryHTML(story) {
+    let hostName = getHostName(story.url);
+
+    // render story markup
+
+    // re:star
+    // line 169 is a solid star, 170 is an outline
+    const storyMarkup = $(`
+    <li id="${story.storyId}">
+    <i class="fas fa-star"></i>
+    <i class="far fa-star hidden"></i>
+            <a class="article-link" href="${story.url}" target="a_blank">
+        <strong>${story.title}</strong>
+      </a>
+      <small class="article-author">by ${story.author}</small>
+      <small class="article-hostname ${hostName}">(${hostName})</small>
+      <small class="article-username">posted by ${story.username}</small>
+    </li>
+  `
+      // re:star - could we add the check for favorited/myStories here?
+      // if story.favorite then $(fas).show(), $(far).hide()
+    );
+    return storyMarkup;
+  }
+
+
+}
+  //handles clicking the Favorites link in nav
+  $('#nav-favorites').on('click', function () {
+  console.log("clicking favorites");
+  generateFaveStories();
+  toggleStar()
+
 })
 
-// handles all things related to favorite-ing on the click of the <i>
-async function ifFavorite(){
-// showStar()
-// sends GET request to server to see if storyID being populated to a list is ALSO in user favorites
-//  IF it is then hide <i> with 'far' and show the one with 'fas'
-// maybe a ternary condition for both? ----- .hidden ? .show() : .hide()
 
-// dbFavorites()
-// updates serverside status of favorites by appending or removing from array in user obj
-// 
-}
-;
+
+
+})
+
