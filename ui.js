@@ -195,6 +195,9 @@ $(async function() {
   function showNavForLoggedInUser() {
     $navLogin.hide();
     $navLogOut.show();
+    $('#main-nav-links').show();
+    $('#nav-user-profile').text(currentUser.username);
+    $('#nav-welcome').show();
   }
 
   /* simple function to pull the hostname from a URL */
@@ -221,4 +224,33 @@ $(async function() {
       localStorage.setItem("username", currentUser.username);
     }
   }
+
+
+$('#nav-submit').on("click", function () {
+  $submitForm.slideToggle();
+  $submitForm.show();
+})
+
+$submitForm.on("submit", async function handleFormSumission(evt) {
+  // prevent form from immediately sending the values
+  evt.preventDefault();
+  
+  // create a newStory object to feed into addStory
+  let newStory = {};
+  newStory.author = $('#author').val();
+  newStory.title = $('#title').val();
+  newStory.url = $('#url').val();
+
+  // add the new story by calling addStory on the class StoryList
+  await StoryList.addStory(newStory);
+
+  // create a new instance of StoryList by invoking generateStories
+  // this creates a new instance of StoryList, clears out the current allStoriesList section, 
+  // recreates the HTML for each story and reappends it to the DOM one by one
+  await generateStories();
+  
+  // reset the form and hide it by sliding it up
+  $submitForm.trigger("reset");
+  $submitForm.slideToggle();
+})
 });
