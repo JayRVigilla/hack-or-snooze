@@ -301,27 +301,27 @@ $(async function () {
     }
     $faveArticlesLoc.show();
     $allStoriesList.hide();
-
-    // toggles star from clear to solid and vice versa in DOM
-    function toggleStar() {
-      $('.fas fa-star').on('click', function (evt) {
-        $('.fas fa-star').hide();
-        $('.far fa-star').show();
-        let storyId = $(evt.target.parentNode).attr('id');
-        // remove from currentUser.favorites
-        axios.delete();
-      })
-      $('.far fa-star').on('click', function (evt) {
-        $('.far fa-star').hide();
-        $('.fas fa-star').show();
-        let storyId = $(evt.target.parentNode).attr('id');
-        // add to currentUser.favorites
-        axios.post();
-      })
-
-    }
   }
 
+  
+    // toggles star from clear to solid and vice versa in DOM
+      $('.fas.fa-star').on('click', function (evt) {
+        console.log(evt.target);
+        $(evt.target).hide();
+        $('.far.fa-star').show();
+        let storyId = $(evt.target.parentNode).attr('id');
+        // remove from currentUser.favorites
+        // axios.delete();
+      })
+
+      $('.far.fa-star').on('click', function (evt) {
+        console.log(evt.target);
+        $(evt.target).hide();
+        $('.fas.fa-star').show();
+        let storyId = $(evt.target.parentNode).attr('id');
+        // add to currentUser.favorites
+        // axios.post();
+      })
 
 
   /**
@@ -353,17 +353,10 @@ $(async function () {
   }
 
 
-}
+
   //handles clicking the Favorites link in nav
   $('#nav-favorites').on('click', function () {
   console.log("clicking favorites");
   generateFaveStories();
-  toggleStar()
-
+  })
 })
-
-
-
-
-})
-
